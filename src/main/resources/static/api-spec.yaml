@@ -1,0 +1,434 @@
+openapi: 3.0.0
+info:
+  title: File Management API
+  version: 1.0.0
+  description: API for managing files and courses
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Development server
+security:
+  - bearerAuth: [ ]
+
+paths:
+  /courses:
+    get:
+      summary: List all courses
+      tags:
+        - Courses
+      responses:
+        '200':
+          description: A list of all courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+    post:
+      summary: Create a new course
+      tags:
+        - Courses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseDTO'
+      responses:
+        '201':
+          description: Course created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseDTO'
+        '400':
+          description: Invalid input
+
+  /courses/{courseId}:
+    get:
+      summary: Get a course by ID
+      tags:
+        - Courses
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detailed information about a course
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseDTO'
+        '404':
+          description: Course not found
+    put:
+      summary: Update a course
+      tags:
+        - Courses
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseDTO'
+      responses:
+        '200':
+          description: Course updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseDTO'
+        '404':
+          description: Course not found
+    delete:
+      summary: Delete a course
+      tags:
+        - Courses
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Course deleted successfully
+        '404':
+          description: Course not found
+
+  /courses/{courseId}/enroll/{studentId}:
+    post:
+      summary: Enroll a student into a course
+      tags:
+        - Courses
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: studentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Student enrolled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseDTO'
+        '404':
+          description: Course or student not found
+
+  /assignments:
+    get:
+      summary: List all assignments
+      tags:
+        - Assignments
+      responses:
+        '200':
+          description: A list of all assignments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Assignment'
+
+  /assignments/{id}:
+    get:
+      summary: Get assignment by ID
+      tags:
+        - Assignments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Assignment found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
+        '404':
+          description: Assignment not found
+    post:
+      summary: Create a new assignment
+      tags:
+        - Assignments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Assignment'
+      responses:
+        '201':
+          description: Assignment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
+        '400':
+          description: Invalid input
+
+  /assignments/update/{id}:
+    put:
+      summary: Update an existing assignment
+      tags:
+        - Assignments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Assignment'
+      responses:
+        '200':
+          description: Assignment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
+        '404':
+          description: Assignment not found
+
+  /assignments/delete/{id}:
+    delete:
+      summary: Delete an assignment
+      tags:
+        - Assignments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Assignment deleted successfully
+        '404':
+          description: Assignment not found
+
+  /auth/signin:
+    post:
+      summary: Authenticate user
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponse'
+
+  /auth/signup:
+    post:
+      summary: Register user
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        '200':
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+  /auth/signup/teacher:
+    post:
+      summary: Register teacher
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        '200':
+          description: Teacher registration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+  /auth/signup/admin:
+    post:
+      summary: Register admin
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        '200':
+          description: Admin registration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        city:
+          type: string
+        country:
+          type: string
+        zip:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+    Course:
+      type: object
+      required:
+        - id
+        - name
+        - enrolledStudentsIds
+        - teacherId
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        enrolledStudentsIds:
+          type: array
+          items:
+            type: string
+        teacherId:
+          type: string
+    CourseDTO:
+      type: object
+      required:
+        - id
+        - name
+        - enrolledStudentsIds
+        - teacherId
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        enrolledStudentsIds:
+          type: array
+          items:
+            type: string
+        teacherId:
+          type: string
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+    SignupRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        zip:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+    JwtResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        type:
+          type: string
+          default: "Bearer"
+        id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

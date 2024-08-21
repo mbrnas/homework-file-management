@@ -1,0 +1,24 @@
+aws:
+  access:
+    key: ${AWS_ACCESS_KEY}
+  secret:
+    key: ${AWS_SECRET_KEY}
+  s3:
+    bucket: ${AWS_S3_BUCKET}
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/file_management_db
+springdoc:
+  swagger-ui:
+    url: /api-spec.yaml
+
+
+bezkoder:
+  app:
+    jwtSecret: "=======================BezKoder=Spring==========================="
+    jwtExpirationMs: 86400000
+
+app:
+  use-local-storage: true
